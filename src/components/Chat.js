@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useUser } from '../app/context/UserContext';
 import ChatService from '@/services/ChatService';
 import ChatSidebar from './ChatSidebar';
@@ -17,6 +17,14 @@ const Chat = () => {
   const [selectedRecipient, setSelectedRecipient] = useState(possibleRecipients[0]);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    const loadHistory = async () => {
+      const history = await chatService.getChatHistory();
+      setMessages(history);
+    };
+    loadHistory();
+  }, []);
 
   const handleSendMessage = () => {
     if (message.trim() && selectedRecipient) {

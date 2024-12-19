@@ -24,10 +24,12 @@ export default function ChatService(
 
   return {
     getChatHistory: useBackend
-      ? () => {
-          return []; // TODO
+      ? async () => {
+          return Promise.resolve([
+            { sender: 'Susan', recipient: 'test', text: 'test' },
+          ]);
         }
-      : () => [],
+      : () => Promise.resolve([]),
     emitMessage: useBackend
       ? (message: MData) => {
           socket.emit('send', message);
