@@ -10,6 +10,7 @@ type MData = {
 
 let socket: Socket;
 let onMessage = (newMessage: MData) => {};
+let onHistory = (history: MData[]) => {};
 
 // calling it a "service" out of Angular habit, feel free to rename and/or move
 export default function ChatService(
@@ -20,14 +21,20 @@ export default function ChatService(
   if (useBackend && !socket) {
     socket = io('http://localhost:8080/');
     socket.on('message', (newMessage) => onMessage(newMessage));
+    socket.on('history', (history) => onHistory(history));
   }
 
   return {
     getChatHistory: useBackend
-      ? async () => {
-          return Promise.resolve([
-            { sender: 'Susan', recipient: 'test', text: 'test' },
-          ]);
+      ? () => {
+          let { promise, resolve } = Promise.withResolvers();
+          onHistory = (history) => {
+            resolve(history);
+            onHistory = (history: MData[]) => {};
+          };
+          socket.emit('requestHistory');
+
+          return promise;
         }
       : () => Promise.resolve([]),
     emitMessage: useBackend

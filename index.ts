@@ -16,6 +16,8 @@ const app = Express();
 
 const port = 8080;
 
+let chatHistory: MData[] = [];
+
 app.get('/', (req: Request, res: Response) => {
   res.send('Backend is running!');
 });
@@ -33,8 +35,13 @@ function onConnection(socket: Socket) {
 
   socket.on('send', (data: MData) => {
     io.sockets.emit('message', data);
+    chatHistory.push(data);
     console.log(data);
     if (MEAN_ROBOT_ACTIVE && !data.fake) fakeReplyToMessage(data);
+  });
+
+  socket.on('requestHistory', () => {
+    socket.emit('history', chatHistory);
   });
 }
 io.sockets.on('connection', onConnection);
