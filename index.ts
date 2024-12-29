@@ -31,13 +31,10 @@ function onConnection(socket: Socket) {
     recipient: 'group',
     text: 'Welcome! This is the start of the chat.',
   };
-  socket.emit('message', message);
+  addNewMessageToChat(message);
 
   socket.on('send', (data: MData) => {
-    io.sockets.emit('message', data);
-    chatHistory.push(data);
-    console.log(data);
-    if (MEAN_ROBOT_ACTIVE && !data.fake) fakeReplyToMessage(data);
+    addNewMessageToChat(data);
   });
 
   socket.on('requestHistory', () => {
@@ -48,6 +45,13 @@ io.sockets.on('connection', onConnection);
 
 console.log('Listening on port ' + port);
 
+function addNewMessageToChat(data: MData) {
+  io.sockets.emit('message', data);
+  chatHistory.push(data);
+  console.log(data);
+  if (MEAN_ROBOT_ACTIVE && !data.fake) fakeReplyToMessage(data);
+}
+
 function fakeReplyToMessage(messageData: MData) {
   const reply = 'Wh*t the fuck is "' + messageData.text + '" supposed to mean?';
   const fakeMessage: MData = {
@@ -56,5 +60,5 @@ function fakeReplyToMessage(messageData: MData) {
     text: reply,
     fake: true,
   };
-  io.sockets.emit('message', fakeMessage);
+  addNewMessageToChat(fakeMessage);
 }
