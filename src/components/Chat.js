@@ -41,7 +41,11 @@ const Chat = () => {
         <h2>Chat with {selectedRecipient}</h2>
         <div style={{ maxHeight: '400px', overflowY: 'auto', marginBottom: '10px' }}>
           {messages
-            .filter((msg) => msg.recipient === selectedRecipient || msg.sender === selectedRecipient)
+            .filter(
+              (msg) =>
+                (msg.recipient === user || msg.sender === user) &&
+                (msg.recipient === selectedRecipient || msg.sender === selectedRecipient)
+            )
             .map((msg, idx) => (
               <div
                 key={idx}
@@ -54,7 +58,14 @@ const Chat = () => {
                 }}
               >
                 {msg.sender !== user && (
-                  <div style={{ marginRight: '5px', backgroundColor: '#eee', borderRadius: '50%', padding: '5px' }}>
+                  <div
+                    style={{
+                      marginRight: '5px',
+                      backgroundColor: '#eee',
+                      borderRadius: '50%',
+                      padding: '5px',
+                    }}
+                  >
                     {msg.sender.charAt(0).toUpperCase()}
                   </div>
                 )}
