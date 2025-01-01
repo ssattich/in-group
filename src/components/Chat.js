@@ -12,7 +12,7 @@ const Chat = () => {
     setMessages((prev) => [...prev, newMessage]);
   });
 
-  const { user } = useUser();
+  const { user, logout } = useUser();
   const possibleRecipients = appUsers.filter((name) => name !== user);
   const [selectedRecipient, setSelectedRecipient] = useState(possibleRecipients[0]);
   const [message, setMessage] = useState('');
@@ -38,6 +38,9 @@ const Chat = () => {
     <div style={{ display: 'flex' }}>
       <ChatSidebar recipients={possibleRecipients} onSelectRecipient={setSelectedRecipient} />
       <div style={{ flex: 1, padding: '10px' }}>
+        <span style={{ cursor: 'pointer', float: 'right' }} onClick={() => logout()}>
+          Logout
+        </span>
         <h2>Chat with {selectedRecipient}</h2>
         <div style={{ maxHeight: '400px', overflowY: 'auto', marginBottom: '10px' }}>
           {messages
