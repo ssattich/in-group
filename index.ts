@@ -37,8 +37,8 @@ function onConnection(socket: Socket) {
     addNewMessageToChat(data);
   });
 
-  socket.on('requestHistory', () => {
-    socket.emit('history', chatHistory);
+  socket.on('history', (callback) => {
+    callback(chatHistory);
   });
 }
 io.sockets.on('connection', onConnection);
