@@ -26,13 +26,6 @@ const io = new Server({ cors: { origin: 'http://localhost:3000' } });
 io.listen(app.listen(port));
 
 function onConnection(socket: Socket) {
-  const message: MData = {
-    sender: 'InGroup',
-    recipient: 'group',
-    text: 'Welcome! This is the start of the chat.',
-  };
-  addNewMessageToChat(message);
-
   socket.on('send', (data: MData) => {
     addNewMessageToChat(data);
   });
