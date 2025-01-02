@@ -12,28 +12,21 @@ let socket: Socket;
 let onMessage = (newMessage: MData) => {};
 
 // calling it a "service" out of Angular habit, feel free to rename and/or move
-export default function ChatService(
-  useBackend: boolean,
-  onNewMessage: (newMessage: MData) => void
-) {
+export default function ChatService(onNewMessage: (newMessage: MData) => void) {
   onMessage = onNewMessage;
-  if (useBackend && !socket) {
+  if (!socket) {
     socket = io('http://localhost:8080/');
     socket.on('message', (newMessage) => onMessage(newMessage));
   }
 
   return {
-    getChatHistory: useBackend
-      ? () => {
-          let { promise, resolve } = Promise.withResolvers();
-          socket.emit('history', (history: MData[]) => resolve(history));
-          return promise;
-        }
-      : () => Promise.resolve([]),
-    emitMessage: useBackend
-      ? (message: MData) => {
-          socket.emit('send', message);
-        }
-      : () => {},
+    getChatHistory: () => {
+      let { promise, resolve } = Promise.withResolvers();
+      socket.emit('history', (history: MData[]) => resolve(history));
+      return promise;
+    },
+    emitMessage: (message: MData) => {
+      socket.emit('send', message);
+    },
   };
 }

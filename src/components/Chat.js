@@ -7,8 +7,7 @@ import ChatSidebar from './ChatSidebar';
 import { appUsers } from '../Variables';
 
 const Chat = () => {
-  const USE_BACKEND = true;
-  const chatService = ChatService(USE_BACKEND, (newMessage) => {
+  const chatService = ChatService((newMessage) => {
     setMessages((prev) => [...prev, newMessage]);
   });
 
