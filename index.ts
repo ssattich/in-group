@@ -16,6 +16,7 @@ const app = Express();
 
 const port = 8080;
 
+let user: string | null = null;
 let chatHistory: MData[] = [];
 
 app.get('/', (req: Request, res: Response) => {
@@ -26,6 +27,20 @@ const io = new Server({ cors: { origin: 'http://localhost:3000' } });
 io.listen(app.listen(port));
 
 function onConnection(socket: Socket) {
+  socket.on('login', (newUser) => {
+    user = newUser;
+    userUpdate();
+  });
+
+  socket.on('logout', () => {
+    user = null;
+    userUpdate();
+  });
+
+  socket.on('userRequest', () => {
+    userUpdate();
+  });
+
   socket.on('send', (data: MData) => {
     addNewMessageToChat(data);
   });
@@ -37,6 +52,10 @@ function onConnection(socket: Socket) {
 io.sockets.on('connection', onConnection);
 
 console.log('Listening on port ' + port);
+
+function userUpdate() {
+  io.sockets.emit('userUpdated', user);
+}
 
 function addNewMessageToChat(data: MData) {
   io.sockets.emit('message', data);
