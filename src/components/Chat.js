@@ -47,8 +47,11 @@ const Chat = () => {
     <div style={{ display: 'flex' }}>
       <ChatSidebar recipients={possibleRecipients} onSelectRecipient={setSelectedRecipient} />
       <div style={{ flex: 1, padding: '10px' }}>
-        <span style={{ cursor: 'pointer', float: 'right' }} onClick={() => logout()}>
-          Logout
+        <span style={{ float: 'right' }}>
+          Hi, {user}! |&nbsp;
+          <span style={{ cursor: 'pointer' }} onClick={() => logout()}>
+            Logout
+          </span>
         </span>
         <h2>Chat with {selectedRecipient}</h2>
         <div style={{ maxHeight: '400px', overflowY: 'auto', marginBottom: '10px' }}>
