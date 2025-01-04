@@ -29,6 +29,9 @@ io.listen(app.listen(port));
 
 function onConnection(socket: Socket) {
   socket.on('login', (newUser) => {
+    if (!userList.includes(newUser)) {
+      userList.push(newUser);
+    }
     user = newUser;
     userUpdate();
   });
