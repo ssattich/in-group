@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useUser } from '../app/context/UserContext';
 import ChatService from '@/services/ChatService';
 import ChatSidebar from './ChatSidebar';
-import { appUsers } from '../Variables';
+import UserService from '@/services/UserService';
 
 const Chat = () => {
   const chatService = ChatService((newMessage) => {
@@ -12,10 +12,20 @@ const Chat = () => {
   });
 
   const { user, logout } = useUser();
-  const possibleRecipients = appUsers.filter((name) => name !== user);
-  const [selectedRecipient, setSelectedRecipient] = useState(possibleRecipients[0]);
+  const [possibleRecipients, setPossibleRecipients] = useState([]);
+  const [selectedRecipient, setSelectedRecipient] = useState();
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    const userService = UserService();
+    (async function populateUsers() {
+      const users = await userService.getUserList();
+      const posRecs = users.filter((name) => name !== user);
+      setPossibleRecipients(posRecs);
+      setSelectedRecipient(posRecs[0]);
+    })();
+  }, []);
 
   useEffect(() => {
     const loadHistory = async () => {

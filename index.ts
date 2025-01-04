@@ -17,6 +17,7 @@ const app = Express();
 const port = 8080;
 
 let user: string | null = null;
+let userList: string[] = ['Tom', 'Susan', 'Annalisa', 'Dummy Account'];
 let chatHistory: MData[] = [];
 
 app.get('/', (req: Request, res: Response) => {
@@ -43,6 +44,10 @@ function onConnection(socket: Socket) {
 
   socket.on('send', (data: MData) => {
     addNewMessageToChat(data);
+  });
+
+  socket.on('userList', (callback) => {
+    callback(userList);
   });
 
   socket.on('history', (callback) => {

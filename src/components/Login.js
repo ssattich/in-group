@@ -1,10 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useUser } from '../app/context/UserContext';
-import { appUsers } from '../Variables';
+import UserService from '@/services/UserService';
 
 const Login = () => {
   const { login } = useUser();
   const [selectedUser, setSelectedUser] = useState('');
+  const [appUsers, setAppUsers] = useState([]);
+
+  useEffect(() => {
+    const userService = UserService();
+    (async function populateUsers() {
+      const users = await userService.getUserList();
+      setAppUsers(users);
+    })();
+  }, []);
 
   const handleLogin = () => {
     if (selectedUser) {
