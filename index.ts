@@ -2,7 +2,7 @@ import Express from 'express';
 import { Request, Response } from 'express';
 import { Server } from 'socket.io';
 import { Socket } from 'socket.io';
-import { MData } from './common';
+import { ChatEvents, MData } from './common';
 
 const MEAN_ROBOT_ACTIVE = true;
 
@@ -22,7 +22,7 @@ const io = new Server({ cors: { origin: 'http://localhost:3000' } });
 io.listen(app.listen(port));
 
 function onConnection(socket: Socket) {
-  socket.on('login', (newUser) => {
+  socket.on(ChatEvents.Login, (newUser) => {
     if (!userList.includes(newUser)) {
       userList.push(newUser);
     }
@@ -30,24 +30,24 @@ function onConnection(socket: Socket) {
     userUpdate();
   });
 
-  socket.on('logout', () => {
+  socket.on(ChatEvents.Logout, () => {
     user = null;
     userUpdate();
   });
 
-  socket.on('userRequest', () => {
+  socket.on(ChatEvents.UserRequest, () => {
     userUpdate();
   });
 
-  socket.on('send', (data: MData) => {
+  socket.on(ChatEvents.Send, (data: MData) => {
     addNewMessageToChat(data);
   });
 
-  socket.on('userList', (callback) => {
+  socket.on(ChatEvents.UserList, (callback) => {
     callback(userList);
   });
 
-  socket.on('history', (callback) => {
+  socket.on(ChatEvents.History, (callback) => {
     callback(chatHistory);
   });
 }
@@ -56,11 +56,11 @@ io.sockets.on('connection', onConnection);
 console.log('Listening on port ' + port);
 
 function userUpdate() {
-  io.sockets.emit('userUpdated', user);
+  io.sockets.emit(ChatEvents.UserUpdated, user);
 }
 
 function addNewMessageToChat(data: MData) {
-  io.sockets.emit('message', data);
+  io.sockets.emit(ChatEvents.Message, data);
   chatHistory.push(data);
   console.log(data);
   if (MEAN_ROBOT_ACTIVE && !data.fake) fakeReplyToMessage(data);

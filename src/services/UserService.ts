@@ -1,4 +1,5 @@
 import { io, Socket } from 'socket.io-client';
+import { ChatEvents } from '../../common';
 
 let socket: Socket;
 
@@ -10,7 +11,7 @@ export default function UserService() {
   return {
     getUserList: () => {
       let { promise, resolve } = Promise.withResolvers();
-      socket.emit('userList', (userList: String[]) => resolve(userList));
+      socket.emit(ChatEvents.UserList, (userList: String[]) => resolve(userList));
 
       return promise;
     },

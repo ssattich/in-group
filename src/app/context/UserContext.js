@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState } from 'react';
 import { io } from 'socket.io-client';
+import { ChatEvents } from '../../../common';
 
 const UserContext = createContext();
 let socket;
@@ -11,17 +12,17 @@ export const UserProvider = ({ children }) => {
 
   if (!socket) {
     socket = io('http://localhost:8080/');
-    socket.on('userUpdated', (user) => {
+    socket.on(ChatEvents.UserUpdated, (user) => {
       setUser(user);
     });
   }
-  socket.emit('userRequest');
+  socket.emit(ChatEvents.UserRequest);
 
   const login = (user) => {
-    socket.emit('login', user);
+    socket.emit(ChatEvents.Login, user);
   };
   const logout = () => {
-    socket.emit('logout');
+    socket.emit(ChatEvents.Logout);
   };
 
   return (
