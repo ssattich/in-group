@@ -1,12 +1,5 @@
 import { io, Socket } from 'socket.io-client';
-
-// just doing this for convenience for now
-// we might wanna make a types lib for the front and back to share
-type MData = {
-  sender: string;
-  recipient: string;
-  text: string;
-};
+import { MData } from '../../common';
 
 let socket: Socket;
 let onMessage = (newMessage: MData) => {};

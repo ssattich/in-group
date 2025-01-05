@@ -2,15 +2,9 @@ import Express from 'express';
 import { Request, Response } from 'express';
 import { Server } from 'socket.io';
 import { Socket } from 'socket.io';
+import { MData } from './common';
 
 const MEAN_ROBOT_ACTIVE = true;
-
-type MData = {
-  sender: string;
-  recipient: string;
-  text: string;
-  fake?: boolean;
-};
 
 const app = Express();
 
