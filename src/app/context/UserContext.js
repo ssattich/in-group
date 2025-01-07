@@ -1,8 +1,8 @@
 'use client';
 
 import { createContext, useContext, useState } from 'react';
-import { io } from 'socket.io-client';
 import { ChatEvents } from '../../../common';
+import { useSocket } from './SocketContext';
 
 const UserContext = createContext();
 let socket;
@@ -11,7 +11,7 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   if (!socket) {
-    socket = io('http://localhost:8080/');
+    socket = useSocket();
     socket.on(ChatEvents.UserUpdated, (user) => {
       setUser(user);
     });
