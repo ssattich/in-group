@@ -1,6 +1,16 @@
 'use client';
 
-const ChatHistory = ({ messages, user, selectedRecipient }) => {
+import { MData } from '../../common';
+
+const ChatHistory = ({
+  messages,
+  user,
+  selectedRecipient,
+}: {
+  messages: MData[];
+  user: string;
+  selectedRecipient: string;
+}) => {
   return (
     <>
       {messages
