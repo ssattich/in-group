@@ -1,18 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useUser } from '../app/context/UserContext';
-import UserService from '@/services/UserService';
+import { useSocket } from '@/app/context/SocketContext';
+import { ChatEvents } from '../../common';
 
 const Login = () => {
+  const socket = useSocket();
   const { login } = useUser();
   const [selectedUser, setSelectedUser] = useState('');
   const [appUsers, setAppUsers] = useState([]);
 
   useEffect(() => {
-    const userService = UserService();
-    (async function populateUsers() {
-      const users = await userService.getUserList();
-      setAppUsers(users);
-    })();
+    socket.emit(ChatEvents.UserList, setAppUsers);
   }, []);
 
   const handleLogin = () => {

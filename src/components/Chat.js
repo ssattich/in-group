@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useUser } from '../app/context/UserContext';
 import ChatHistory from './ChatHistory';
 import ChatSidebar from './ChatSidebar';
-import UserService from '@/services/UserService';
 import { useSocket } from '@/app/context/SocketContext';
 import { ChatEvents } from '../../common';
 
@@ -16,13 +15,11 @@ const Chat = () => {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    const userService = UserService();
-    (async function populateUsers() {
-      const users = await userService.getUserList();
+    socket.emit(ChatEvents.UserList, (users) => {
       const posRecs = users.filter((name) => name !== user);
       setPossibleRecipients(posRecs);
       setSelectedRecipient(posRecs[0]);
-    })();
+    });
   }, []);
 
   const handleSendMessage = () => {
