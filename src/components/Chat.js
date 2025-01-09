@@ -2,21 +2,18 @@
 
 import { useEffect, useState } from 'react';
 import { useUser } from '../app/context/UserContext';
-import ChatService from '@/services/ChatService';
 import ChatHistory from './ChatHistory';
 import ChatSidebar from './ChatSidebar';
 import UserService from '@/services/UserService';
+import { useSocket } from '@/app/context/SocketContext';
+import { ChatEvents } from '../../common';
 
 const Chat = () => {
-  const chatService = ChatService((newMessage) => {
-    setMessages((prev) => [...prev, newMessage]);
-  });
-
+  const socket = useSocket();
   const { user, logout } = useUser();
   const [possibleRecipients, setPossibleRecipients] = useState([]);
   const [selectedRecipient, setSelectedRecipient] = useState();
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     const userService = UserService();
@@ -28,18 +25,10 @@ const Chat = () => {
     })();
   }, []);
 
-  useEffect(() => {
-    const loadHistory = async () => {
-      const history = await chatService.getChatHistory();
-      setMessages(history);
-    };
-    loadHistory();
-  }, []);
-
   const handleSendMessage = () => {
     if (message.trim() && selectedRecipient) {
       const newMessage = { sender: user, recipient: selectedRecipient, text: message };
-      chatService.emitMessage(newMessage);
+      socket.emit(ChatEvents.Send, newMessage);
       setMessage('');
     }
   };
@@ -56,7 +45,7 @@ const Chat = () => {
         </span>
         <h2>Chat with {selectedRecipient}</h2>
         <div style={{ maxHeight: '400px', overflowY: 'auto', marginBottom: '10px' }}>
-          <ChatHistory messages={messages} user={user} selectedRecipient={selectedRecipient}></ChatHistory>
+          <ChatHistory selectedRecipient={selectedRecipient}></ChatHistory>
         </div>
         <input
           type="text"

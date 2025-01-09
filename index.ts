@@ -62,6 +62,7 @@ function userUpdate() {
 function addNewMessageToChat(data: MData) {
   io.sockets.emit(ChatEvents.Message, data);
   chatHistory.push(data);
+  io.sockets.emit(ChatEvents.History, chatHistory);
   console.log(data);
   if (MEAN_ROBOT_ACTIVE && !data.fake) fakeReplyToMessage(data);
 }
