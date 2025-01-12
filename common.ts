@@ -12,6 +12,5 @@ export enum ChatEvents {
   Message = 'Message',
   Send = 'Send',
   UserList = 'UserList',
-  UserRequest = 'UserRequest',
-  UserUpdated = 'UserUpdated',
+  User = 'User',
 }

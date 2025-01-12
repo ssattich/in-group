@@ -1,22 +1,21 @@
 'use client';
 
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { ChatEvents } from '../../../common';
 import { useSocket } from './SocketContext';
 
 const UserContext = createContext();
-let socket;
 
 export const UserProvider = ({ children }) => {
+  const socket = useSocket();
   const [user, setUser] = useState(null);
 
-  if (!socket) {
-    socket = useSocket();
-    socket.on(ChatEvents.UserUpdated, (user) => {
-      setUser(user);
-    });
-  }
-  socket.emit(ChatEvents.UserRequest);
+  useEffect(() => {
+    socket.on(ChatEvents.User, setUser);
+    socket.emit(ChatEvents.User, setUser);
+
+    return () => socket.off(ChatEvents.User, setUser);
+  }, []);
 
   const login = (user) => {
     socket.emit(ChatEvents.Login, user);

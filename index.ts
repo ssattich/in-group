@@ -35,8 +35,8 @@ function onConnection(socket: Socket) {
     userUpdate();
   });
 
-  socket.on(ChatEvents.UserRequest, () => {
-    userUpdate();
+  socket.on(ChatEvents.User, (callback) => {
+    callback(user);
   });
 
   socket.on(ChatEvents.Send, (data: MData) => {
@@ -56,7 +56,7 @@ io.sockets.on('connection', onConnection);
 console.log('Listening on port ' + port);
 
 function userUpdate() {
-  io.sockets.emit(ChatEvents.UserUpdated, user);
+  io.sockets.emit(ChatEvents.User, user);
 }
 
 function addNewMessageToChat(data: MData) {
