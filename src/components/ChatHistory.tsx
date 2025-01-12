@@ -13,9 +13,9 @@ const ChatHistory = ({ selectedRecipient }: { selectedRecipient: string }) => {
   const [messages, setMessages] = useState<MData[]>([]);
 
   useEffect(() => {
-    // TODO: Look into teardown of this when component destroyed?
     socket.on(ChatEvents.History, setAllHistory);
     socket.emit(ChatEvents.History, setAllHistory);
+    return () => socket.off(ChatEvents.History, setAllHistory);
   }, []);
 
   useEffect(() => {
