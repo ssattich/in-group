@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
 import { useUser } from './context/UserContext';
 import Signup from '../components/Signup';
-import Login from '../components/Login';
+import LoginOld from '../components/LoginOld';
 import Chat from '../components/Chat';
 
 export default function App() {
@@ -14,7 +14,7 @@ export default function App() {
         <>
           <Signup />
           <br />
-          <Login />
+          <LoginOld />
         </>
       )}
       {user && <Chat />}
